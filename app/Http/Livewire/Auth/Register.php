@@ -29,7 +29,7 @@ class Register extends Component
         $this->validate();
 
         $user = User::create([
-            'username' => $this->name,
+            'name' => $this->name,
             'email' => $this->email,
             'password' => Hash::make($this->password),
             'role' => $this->role,

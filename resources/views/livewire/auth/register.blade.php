@@ -9,8 +9,8 @@
         <form wire:submit.prevent="register" class="mt-8 space-y-6">
             <div class="space-y-4">
                 <div>
-                    <label for="username" class="block mb-1 text-gray-700 font-medium">Full Name</label>
-                    <input wire:model="username" type="text" required 
+                    <label for="name" class="block mb-1 text-gray-700 font-medium">Full Name</label>
+                    <input wire:model="name" type="text" required 
                            class="w-full px-3 py-2 border border-gray-300 
                            placeholder-gray-500 text-gray-900 rounded-md 
                            focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" 
