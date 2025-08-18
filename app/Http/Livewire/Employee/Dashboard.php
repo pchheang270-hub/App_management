@@ -15,10 +15,10 @@ class Dashboard extends Component
         $myAttendance = Attendance::where('user_id', $user->id)
         ->orderBy('created_at', 'desc')->take(5)
         ->get();
-        // $myLeaves = Leave::where('user_id', $user->id)
-        //     ->orderBy('created_at', 'desc')
-        //     ->take(5)
-        //     ->get();
+        $myLeaves = Leave::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
 
         return view('livewire.employee.dashboard', [
             'myAttendance' => $myAttendance,

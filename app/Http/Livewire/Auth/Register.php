@@ -39,11 +39,9 @@ class Register extends Component
 
         Auth::login($user);
 
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } else {
-            return redirect()->route('employee.dashboard');
-        }
+        return $user->role === 'admin'
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('employee.dashboard');
     }
 
     public function render()

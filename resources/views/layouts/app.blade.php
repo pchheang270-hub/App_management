@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="utf-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -11,21 +10,17 @@
     @livewireStyles
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+
     <!-- Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@100;300;400;700;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="http://keith-wood.name/css/jquery.signature.css">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.0/cropper.css">
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    <!-- AlpineJS -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
-
-    @livewireStyles
-
 </head>
 
 <body class="font-sans antialiased ">
@@ -34,7 +29,7 @@
 
     @yield('content')
     @livewireScripts
-   
+
 
     {{-- @include('components.sidebar')
 
@@ -47,18 +42,18 @@
         <a href="{{ route('logout') }}">Logout</a>
     @endauth --}}
 
-     {{-- @auth
+    {{-- @auth
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit">Logout</button>
         </form>
-    @endauth
+    @endauth --}}
 
-    @guest
+    {{-- @guest
         <a href="{{ route('login') }}">Login</a>
          <a href="{{ route('sigin') }}">Sigin</a>
     @endguest --}}
-    
+
 </body>
 
 </html>

@@ -2,7 +2,7 @@
     <div class="max-w-md w-full space-y-8">
          <div class="bg-gradient-to-br from-blue-50 to-green-50 border border-gray-200 py-8  rounded-lg shadow-md p-6">
         <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-green-700">
                 Create your account
             </h2>
         </div>
@@ -72,7 +72,7 @@
             <div>
                 <button type="submit" class="w-full flex justify-center 
                     py-2 px-4 border border-transparent text-sm font-medium rounded-md
-                    text-white bg-green-600 hover:bg-blue-700 focus:outline-none 
+                    text-white bg-green-600 hover:bg-green-700 focus:outline-none 
                     focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Register
                 </button>

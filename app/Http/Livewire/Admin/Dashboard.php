@@ -1,12 +1,9 @@
 <?php
-
 namespace App\Http\Livewire\Admin;
-
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Attendance;
 use App\Models\Leave;
-
 class Dashboard extends Component
 {
     public function render()

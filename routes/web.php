@@ -14,14 +14,18 @@ Route::get('/home', Homescreen::class)->name('home');
 
 // Guest routes (not logged in)
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login', Login::class)->name('login');
-    Route::get('/register', Register::class)->name('register');
-    // Route::post('/register', Register::class)->name('register');
+// Route::middleware('guest')->group(function () {
+//     Route::get('/login', Login::class)->name('login');
+//     Route::get('/register', Register::class)->name('register');
+    
 
   
-});
-// Route::post('/register', Register::class)->name('register');
+// });
+
+// !!!Route login and register!!
+  Route::get('/login', Login::class)->name('login');
+  Route::get('/register', Register::class)->name('register');
+
 
 
 // Admin routes

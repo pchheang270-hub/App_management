@@ -24,6 +24,8 @@ return new class extends Migration
             $table->timestamps(); // Adds created_at and updated_at
 
         });
+
+
     }
 
     /**
@@ -31,6 +33,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('attendance');
     }
 };
+
