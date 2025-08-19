@@ -9,7 +9,7 @@ class Leave extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id',
+        'users_id',
         'start_date',
         'end_date',
         'reason',
@@ -23,6 +23,6 @@ class Leave extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'users_id');
     }
 }

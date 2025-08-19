@@ -22,8 +22,8 @@ class Attendance extends Model
         'check_out_time' => 'datetime',
     ];
 
-    public function user()
+   public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'users_id');
     }
 }

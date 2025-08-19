@@ -7,20 +7,19 @@ use App\Http\Livewire\Auth\Register;
 use App\Http\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Http\Livewire\Employee\Dashboard as EmployeeDashboard;
 use App\Http\Livewire\Layout\Homescreen;
+use App\Http\Livewire\Page\EmployeeModal;
+use App\Http\Livewire\Page\LeaveModal;
+
 
 // Home/Landing page
-Route::get('/home', Homescreen::class)->name('home');
+Route::get('home', Homescreen::class)->name('home');
 
 
-// Guest routes (not logged in)
+// ----Route Page-----
+Route::get('/employee', EmployeeModal::class)->name('employee');
+Route::get('/leave', LeaveModal::class)->name('leave');
 
-// Route::middleware('guest')->group(function () {
-//     Route::get('/login', Login::class)->name('login');
-//     Route::get('/register', Register::class)->name('register');
-    
 
-  
-// });
 
 // !!!Route login and register!!
   Route::get('/login', Login::class)->name('login');
@@ -45,3 +44,14 @@ Route::post('/logout', function () {
 })->name('logout');
 
 
+
+
+// Guest routes (not logged in)
+
+// Route::middleware('guest')->group(function () {
+//     Route::get('/login', Login::class)->name('login');
+//     Route::get('/register', Register::class)->name('register');
+    
+
+  
+// });

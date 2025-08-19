@@ -10,7 +10,7 @@
 </head>
 
 <body class="bg-green-100 flex min-h-screen ">
-    <div class="flex min-h-screen">
+    <div class="flex ">
         {{-- <div class="w-64 bg-white shadow-lg">
         
         </div> --}}
@@ -20,12 +20,15 @@
                 <h2 class="text-xl font-bold text-green-800">Admin Dashboard</h2>
             </div>
             <nav class="mt-6">
-                <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center px-6 py-3 text-gray-700 bg-blue-50 border-r-4 border-blue-500">Dashboard</a>
-                <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">Employees</a>
-                <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">Attendance</a>
-                <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">Leave Requests</a>
-                <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">Settings</a>
+
+                <ul>
+                    <li class="mb-2"><a href="{{ route('admin.dashboard') }}" class="flex items-center p-2 bg-gray-300 rounded">🏠 Dashboard</a></li>
+                    <li class="mb-2"><a href="{{route('employee')}}" class="flex items-center p-2">👤 Employees</a></li>
+                    <li class="mb-2"><a href="#" class="flex items-center p-2">📈 Attendance</a></li>
+                    <li class="mb-2"><a href="{{route('leave')}}" class="flex items-center p-2">📋 Leave Requests</a></li>
+                    <li class="mb-2"><a href="#" class="flex items-center p-2">⚙️ Settings</a></li>
+                </ul>
+              
             </nav>
         </aside>
         <div class="flex-1 flex flex-col">
@@ -46,3 +49,12 @@
 </body>
 
 </html>
+
+
+{{-- --------------------------------------------------------------------------- --}}
+  {{-- <a href="{{ route('admin.dashboard') }}"
+                    class="flex items-center px-6 py-3 text-gray-700 bg-blue-50 border-r-4 border-blue-500">Dashboard</a>
+                <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">Employees</a>
+                <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">Attendance</a>
+                <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">Leave Requests</a>
+                <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">Settings</a> --}}
