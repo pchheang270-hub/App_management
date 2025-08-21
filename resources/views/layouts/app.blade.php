@@ -23,11 +23,9 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
 </head>
 
-<body class="bg-gradient-to-r from-green-50 to-green-100 flex min-h-screen">
+<body>
     <div class="flex ">
-        {{-- <div class="w-64 bg-white shadow-lg">
-        
-        </div> --}}
+
 
         <aside class="w-64 bg-white shadow-2xl rounded-lg px-6 py-8 space-y-6 ">
             <div class=" border-b">
@@ -36,9 +34,9 @@
             <nav class="mt-6">
 
 
-                <a href="{{ route('admin.dashboard') }}"
+                {{-- <a href="{{ route('dashboard') }}"
                     class="flex items-center p-2 bg-green-200 rounded-l-lg border-l-4 border-green-500 font-semibold">🏠
-                    Dashboard</a>
+                    Dashboard</a> --}}
                 <a href="{{ route('employee') }}" class="flex items-center p-2">👤 Employees</a>
                 <a href="#" class="flex items-center p-2">📈 Attendance</a>
                 <a href="{{ route('leave') }}" class="flex items-center p-2">📋 Leave Requests</a>
@@ -47,22 +45,8 @@
 
             </nav>
         </aside>
-        <div class=" flex-auto flex-col">
-            <header class="bg-white shadow-sm border-b px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                        <div class="text-lg font-semibold">Logo</div>
-                        <span class="text-gray-600">Welcome Admin</span>
-                    </div>
-                    <button wire:click="logout"
-                        class="px-3 py-1 bg-red-500 hover:bg-red-500 text-white rounded-lg shadow">
-                        Logout
-                    </button>
 
-                </div>
-            </header>
-            {{-- <main class="flex-1 overflow-y-auto p-6">{{ $slot }}</main> --}}
-        </div>
+
     </div>
     @livewireScripts
     @yield('content')

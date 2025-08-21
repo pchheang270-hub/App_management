@@ -1,4 +1,5 @@
 <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+    
     <div>
         {{-- Button to show/hide form --}}
         <button wire:click="toggleForm"
@@ -55,7 +56,7 @@
         @endif
         <table class="min-w-full border-collapse">
             <thead>
-                <tr class="bg-gray-100 text-left">
+                <tr class=" text-left  bg-gradient-to-r  from-green-300 to-blue-300 rounded-t-lg">
                     <th class="px-4 py-2 border">Employee Name</th>
                     <th class="px-4 py-2 border">Date Range</th>
                     <th class="px-4 py-2 border">Reason</th>

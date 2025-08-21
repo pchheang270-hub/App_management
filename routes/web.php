@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Register;
-use App\Http\Livewire\Admin\Dashboard as AdminDashboard;
-use App\Http\Livewire\Employee\Dashboard as EmployeeDashboard;
+use App\Http\Livewire\Dashboard;
+// use App\Http\Livewire\Employee\Dashboard as EmployeeDashboard;
 use App\Http\Livewire\Layout\Homescreen;
 use App\Http\Livewire\Page\EmployeeModal;
 use App\Http\Livewire\Page\LeaveModal;
@@ -29,12 +29,12 @@ Route::get('/leave', LeaveModal::class)->name('leave');
 
 // Admin routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', AdminDashboard::class)->name('dashboard');
+    Route::get('dashboard', Dashboard::class)->name('dashboard');
 });
 
 // Employee routes  
 Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee.')->group(function () {
-    Route::get('/dashboard', EmployeeDashboard::class)->name('dashboard');
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
 });
 
 // Logout

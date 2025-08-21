@@ -3,95 +3,109 @@
 namespace App\Http\Livewire\Page;
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use App\Models\User;
 
 class EmployeeModal extends Component
 {
-    public $isOpen = false;
+    use WithFileUploads;
+
+    public $search = '';
     public $formOpen = false;
     public $deleteOpen = false;
-    public $employeeId;
-    public $employeeName;
-    public $name, $email, $position, $department, $joinDate, $status = 'active', $avatar;
+    public $usersId;
 
-    protected $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:employees,email',
-        'position' => 'required|string|max:255',
-        'department' => 'required|string|max:255',
-        'joinDate' => 'required|date',
-        'status' => 'required|in:active,inactive',
-        'avatar' => 'nullable|string',
-    ];
+    public $name, $email, $position, $department, $join_date, $status = 'active', $avatar;
 
-    protected $listeners = ['openEmployeeModal' => 'openForm'];
-
-    // 🔹 Open Add/Edit Modal
-    public function open($id = null)
+    protected function rules()
     {
-        $this->resetValidation();
-        $this->resetExcept('DeleteOpenForm');
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $this->usersId,
+            'position' => 'required|string|max:255',
+            'department' => 'required|string|max:255',
+            'join_date' => 'required|date',
+            'status' => 'required|in:active,inactive',
+            'avatar' => 'nullable|image|max:1024', // max 1MB
+        ];
+    }
+
+    public function render()
+    {
+        $query = User::query();
+
+        if ($this->search) {
+            $query->where('name', 'like', '%' . $this->search . '%');
+        }
+
+
+        return view('livewire.page.employee-modal', [
+            'users' => $query->latest()->get(),
+        ])->extends('layouts.app')
+          ->section('content');
+    }
+
+    public function openForm($id = null)
+    {
+        $this->resetErrorBag();
+        $this->reset([
+            'usersId', 'name', 'email', 'position', 'department',
+            'join_date', 'status', 'avatar', 
+        ]);
 
         if ($id) {
-            $employee = User::findOrFail($id);
-            $this->employeeId = $employee->id;
-            $this->name = $employee->name;
-            $this->email = $employee->email;
-            $this->position = $employee->position;
-            $this->department = $employee->department;
-            $this->joinDate = $employee->join_date;
-            $this->status = $employee->status;
-            $this->avatar = $employee->avatar;
+            $user = User::findOrFail($id);
+            $this->usersId = $user->id;
+            $this->name = $user->name;
+            $this->email = $user->email;
+            $this->position = $user->position;
+            $this->department = $user->department;
+            $this->join_date = $user->join_date;
+            $this->status = $user->status;
+        
+            $this->avatar = null; // Avatar upload is handled separately
         }
 
         $this->formOpen = true;
     }
 
-    // 🔹 Save Employee
     public function save()
     {
         $this->validate();
 
+        $avatarPath = null;
+        if ($this->avatar) {
+            $avatarPath = $this->avatar->store('avatars', 'public');
+        }
+
         User::updateOrCreate(
-            ['id' => $this->employeeId],
+            ['id' => $this->usersId],
             [
                 'name' => $this->name,
                 'email' => $this->email,
                 'position' => $this->position,
                 'department' => $this->department,
-                'join_date' => $this->joinDate,
+                'join_date' => $this->join_date,
                 'status' => $this->status,
-                'avatar' => $this->avatar ?: "https://ui-avatars.com/api/?name=" . urlencode($this->name),
-     ]
+                'avatar' => $avatarPath ?? null,
+            ]
         );
 
         $this->reset();
-        $this->emit('employeeUpdated'); // Refresh employee list
+        $this->emit('userUpdated');
     }
 
-    // 🔹 Open Delete Confirmation
-    public function confirmDelete($id, $name)
+    public function confirmDelete($id)
     {
-        $this->users_Id = $id;
-        $this->name= $name;
+        $this->usersId = $id;
         $this->deleteOpen = true;
     }
 
-    // 🔹 Delete Employee
     public function delete()
     {
-        if ($this->employeeId) {
-            User::find($this->employeeId)->delete();
-            $this->deleteOpen = false;
-            $this->emit('employeeUpdated');
-        }
-    }
-
-    public function render()
-    {
-    
-        return view('livewire.page.employee-modal')
-            ->extends('layouts.app')   // ✅ should extend your main layout
-            ->section('content');
+        User::find($this->usersId)?->delete();
+        $this->reset();
+        $this->deleteOpen = false;
+        $this->emit('userUpdated');
     }
 }

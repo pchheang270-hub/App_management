@@ -1,98 +1,178 @@
-
 <div>
-    {{-- Delete Employee Modal --}}
-    @if($deleteOpen)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-                <h2 class="text-xl font-semibold text-red-600 flex items-center gap-2">
-                    ⚠ Delete Employee
-                </h2>
-                <p class="mt-2">Are you sure you want to delete <strong>{{ $employeeName }}</strong>?  
-                This action cannot be undone.</p>
+    <main class="flex-1 p-8 overflow-auto">
 
-                <div class="flex justify-end gap-3 mt-6">
-                    <button wire:click="$set('deleteOpen', false)" class="px-4 py-2 border rounded">Cancel</button>
-                    <button wire:click="delete" class="px-4 py-2 bg-red-600 text-white rounded">Delete Employee</button>
+        <div class="p-6">
+            <!-- Search + Filter -->
+            <div class="flex gap-4 mb-4">
+                <input wire:model.debounce.300ms="search" type="text" placeholder="Search..."
+                    class="border rounded px-3 py-2 w-1/2">
+                {{-- <select wire:model="selectedDepartment" class="border rounded px-3 py-2">
+                    <option value="">All Departments</option>
+                    <option>Engineering</option>
+                    <option>Marketing</option>
+                    <option>HR</option>
+                </select> --}}
+                <button wire:click="openForm" class="bg-green-700 text-white px-4 py-2 rounded">Add New Employees</button>
+            </div>
+
+            <!-- Table -->
+            <table class="w-full table-auto border ">
+                <thead>
+                    <tr class=" text-left bg-gradient-to-r from-green-300 to-blue-300 rounded-t-lg">
+                        <th class="p-2 border">Profile</th>
+                        <th class="p-2 border">Name</th>
+                        <th class="p-2 border">Email</th>
+                        <th class="p-2 border">Position</th>
+                        <th class="p-2 border">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="flix-justify-center">
+                    @forelse($users as $emp)
+                        <tr>
+                            <td class="px-4 p-2 border">
+                                <img src="{{ $emp->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($emp->name) }}"
+                                    class="w-8 h-8 rounded-full" />
+                            </td>
+                            <td class="px-4 p-2 border">{{ $emp->name }}</td>
+                            <td class=" px-4 p-2 border">{{ $emp->email }}</td>
+                            <td class=" px-4 p-2 border">{{ $emp->position }}</td>
+                            <td class=" px-4 p-2 border">
+                                <button wire:click="openForm({{ $emp->id }})" class="text-green-500">Edit</button>
+                                <button wire:click="confirmDelete({{ $emp->id }})"
+                                    class="text-red-500 ml-2">Delete</button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center p-4 text-gray-500">No employees found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            <!-- Add/Edit Modal -->
+            @if ($formOpen)
+                <div class="fixed inset-0 bg-green bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl">
+                        <!-- Modal Header -->
+                        <div
+                            class="px-6 py-4 bg-gradient-to-r from-green-600 to-blue-300 rounded-t-lg text-white flex justify-between items-center">
+                            <h2 class="text-xl font-semibold">
+                                {{ $usersId ? 'Edit User' : 'Create New User' }}
+                            </h2>
+                            <button wire:click="$set('formOpen', false)" class="text-white text-2xl">&times;</button>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <div class="p-6">
+                            @isset($rolesError)
+                                @if ($rolesError)
+                                    <div class="text-red-500">Failed to fetch roles</div>
+                                @endif
+                            @endisset
+
+                            <form wire:submit.prevent="save">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Left: Profile Photo Upload -->
+                                    <div class="flex flex-col items-center gap-4">
+                                        <label for="photo" class="text-gray-700">Profile Photo</label>
+
+                                        <div
+                                            class="w-32 h-32 bg-gray-100 rounded-full overflow-hidden flex items-center justify-center cursor-pointer relative">
+                                            @if ($avatar)
+                                                <img src="{{ $avatar }}" class="w-full h-full object-cover" />
+                                            @else
+                                                <span class="text-gray-400">Click to upload</span>
+                                            @endif
+                                            <input type="file" wire:model="avatar" accept="image/*" />
+                                        </div>
+                                        <p class="text-sm text-gray-500">Max 5MB • JPG, PNG</p>
+                                    </div>
+
+                                    <!-- Right: User Fields -->
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-gray-700">Username *</label>
+                                            <input wire:model="name" type="text" placeholder="Enter username"
+                                                class="w-full border px-3 py-2 rounded focus:ring focus:ring-blue-300">
+                                        </div>
+
+
+                                        <div>
+                                            <label class="block text-gray-700">Email Address *</label>
+                                            <input wire:model="email" type="email" placeholder="Enter email address"
+                                                class="w-full border px-3 py-2 rounded">
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700">Position *</label>
+                                            <input wire:model="position" type="position" placeholder="Enter position"
+                                                class="w-full border px-3 py-2 rounded">
+                                        </div>
+
+                                        {{-- <div>
+                                            <label class="block">Role</label>
+                                            <select wire:model="role" class="w-full border rounded px-3 py-2">
+                                                <option value="">Select Role</option>
+                                                @foreach ($roles as $role)
+                                                    <option value="{{ is_object($role) ? $role->id : $role }}">
+                                                        {{ is_object($role) ? $role->name : $role }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div> --}}
+
+                                        {{-- <div>
+                                            <label class="block text-gray-700">Password *</label>
+                                            <input wire:model="password" type="password" placeholder="Enter password"
+                                                class="w-full border px-3 py-2 rounded">
+                                        </div> --}}
+
+                                        <div>
+                                            <label class="block text-gray-700">Jion Date </label>
+                                            <input wire:model="join_date" type="date"
+                                                class="w-full border px-3 py-2 rounded">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Footer Buttons -->
+                                <div class="flex justify-end mt-6 gap-4">
+                                    <button type="button" wire:click="$set('formOpen', false)"
+                                        class="px-4 py-2 border border-green-600 rounded hover:bg-gray-100">Cancel</button>
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                                        {{ $usersId ? 'Update' : 'Create' }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    @endif
+                {{-- @endif --}}
 
-    {{-- Add/Edit Employee Modal --}}
-    @if($formOpen)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
-                <h2 class="text-xl font-semibold mb-4">
-                    {{ $employeeId ? 'Edit Employee' : 'Add Employee' }}
-                </h2>
-
-                <form wire:submit.prevent="save" class="space-y-4">
-                    <div class="flex justify-center">
-                        <img class="w-20 h-20 rounded-full"
-                            src="{{ $avatar ?: 'https://ui-avatars.com/api/?name=' . urlencode($name) }}"
-                            alt="avatar">
-                    </div>
-
-                    <div>
-                        <label class="block">Full Name *</label>
-                        <input type="text" wire:model="name" class="w-full border rounded px-3 py-2">
-                        @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="block">Email *</label>
-                        <input type="email" wire:model="email" class="w-full border rounded px-3 py-2">
-                        @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="block">Position *</label>
-                        <input type="text" wire:model="position" class="w-full border rounded px-3 py-2">
-                    </div>
-
-                    <div>
-                        <label class="block">Department *</label>
-                        <select wire:model="department" class="w-full border rounded px-3 py-2">
-                            <option value="">Select Department</option>
-                            <option value="Engineering">Engineering</option>
-                            <option value="Product">Product</option>
-                            <option value="Design">Design</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Sales">Sales</option>
-                            <option value="HR">HR</option>
-                            <option value="Finance">Finance</option>
-                            <option value="Operations">Operations</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block">Join Date *</label>
-                        <input type="date" wire:model="joinDate" class="w-full border rounded px-3 py-2">
-                    </div>
-
-                    <div>
-                        <label class="block">Status *</label>
-                        <select wire:model="status" class="w-full border rounded px-3 py-2">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block">Avatar URL (optional)</label>
-                        <input type="text" wire:model="avatar" class="w-full border rounded px-3 py-2">
-                    </div>
-
-                    <div class="flex justify-end gap-3">
-                        <button type="button" wire:click="$set('formOpen', false)"
-                            class="px-4 py-2 border rounded">Cancel</button>
-                        <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded">
-                            {{ $employeeId ? 'Update Employee' : 'Add Employee' }}
-                        </button>
-                    </div>
+                {{-- <div class="flex justify-end gap-2">
+                    <button type="button" wire:click="$set('formOpen', false)" class="px-4 py-2 border">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white">Save</button>
+                </div> --}}
                 </form>
+        </div>
+</div>
+@endif
+
+<!-- Delete Modal -->
+@if ($deleteOpen)
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div class="bg-white p-4 rounded shadow w-full max-w-sm">
+            <h2 class="text-red-600 font-semibold mb-2">Delete Employee</h2>
+            <p>Are you sure you want to delete this employee? This action cannot be undone.</p>
+
+            <div class="mt-4 flex justify-end gap-2">
+                <button wire:click="$set('deleteOpen', false)" class="px-4 py-2 border">Cancel</button>
+                <button wire:click="delete" class="px-4 py-2 bg-red-600 text-white">Delete</button>
             </div>
         </div>
-    @endif
+    </div>
+@endif
+</main>
+</div>
 </div>
