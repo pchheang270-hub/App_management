@@ -3,9 +3,9 @@
 
         <div class="p-6">
             <!-- Search + Filter -->
-            <div class="flex gap-4 mb-4">
+            <div class="flex gap-4 justify-between mb-4">
                 <input wire:model.debounce.300ms="search" type="text" placeholder="Search..."
-                    class="border rounded px-3 py-2 w-1/2">
+                    class="border rounded px-3 p-8 py-2 w-2/1">
                 {{-- <select wire:model="selectedDepartment" class="border rounded px-3 py-2">
                     <option value="">All Departments</option>
                     <option>Engineering</option>
@@ -16,7 +16,7 @@
             </div>
 
             <!-- Table -->
-            <table class="w-full table-auto border ">
+            <table class="w-full table-auto border bg-white">
                 <thead>
                     <tr class=" text-left bg-gradient-to-r from-green-300 to-blue-300 rounded-t-lg">
                         <th class="p-2 border">Profile</th>
@@ -71,7 +71,8 @@
                                 @endif
                             @endisset
 
-                            <form wire:submit.prevent="save">
+                            <form wire:submit.prevent="{{ $usersId ? 'updateUser' : 'createUser' }}">
+>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <!-- Left: Profile Photo Upload -->
                                     <div class="flex flex-col items-center gap-4">
@@ -144,7 +145,7 @@
                                         {{ $usersId ? 'Update' : 'Create' }}
                                     </button>
                                 </div>
-                            </form>
+                            </wire:submit.prevent=>
                         </div>
                     </div>
                 </div>
@@ -175,4 +176,6 @@
 @endif
 </main>
 </div>
+ @livewireScripts
+@livewireStyles
 </div>

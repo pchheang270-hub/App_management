@@ -8,6 +8,7 @@ class Dashboard extends Component
 {
   public $attendances;
 
+
     public function mount()
     
     {
@@ -21,6 +22,8 @@ class Dashboard extends Component
             ['user_id' => Auth::id(), 'date' => today()],
             ['check_in' => now()]
         );
+        $this->reset(['formOpen', 'name', 'email', 'position', 'join_date', 'avatar', 'usersId']);
+        session()->flash('success', 'Employee saved successfully!');
 
         $this->attendances = Attendance::with('employee')->get(); // refresh table
     }
@@ -36,6 +39,7 @@ class Dashboard extends Component
             $attendance->update(['check_out' => now()]);
             $this->attendances = Attendance::with('employee')->get(); // refresh table
         }
+         session()->flash('message', '✅ You have checked in successfully.');
     }
     public function render()
     {
@@ -52,6 +56,8 @@ class Dashboard extends Component
             'pendingLeaves' => $pendingLeaves,
             'attendanceRecords' => $todayAttendanceRecords,
         ])->extends('layouts.app')->section('content');
+
+        // $this->section = $user->role;
     }
     
 

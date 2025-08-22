@@ -1,4 +1,4 @@
-<div class="overflow-x-auto bg-white shadow-md rounded-lg">
+<div class="flex-1 p-8 overflow-auto">
     
     <div>
         {{-- Button to show/hide form --}}
@@ -8,53 +8,8 @@
         </button>
 
         {{-- Form --}}
-        @if ($showForm)
-            <div class="border p-4 mb-4 rounded-lg bg-gray-50 shadow">
-                <h2 class="text-lg font-semibold mb-2">New Leave Request</h2>
-
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label>Employee Name</label>
-                        <select wire:model="users_id" class="w-full border rounded px-2 py-1">
-                            <option value="">Select Employee</option>
-                            @foreach (\App\Models\User::all() as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('users_id')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label>Start Date</label>
-                        <input type="date" wire:model="start_date" class="w-full border rounded px-2 py-1">
-                        @error('start_date')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label>End Date</label>
-                        <input type="date" wire:model="end_date" class="w-full border rounded px-2 py-1">
-                        @error('end_date')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label>Reason</label>
-                        <input type="text" wire:model="reason" class="w-full border rounded px-2 py-1">
-                        @error('reason')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
-                <button wire:click="submit" class="bg-blue-600 text-white px-4 py-2 rounded shadow">Submit</button>
-            </div>
-        @endif
-        <table class="min-w-full border-collapse">
+       
+        <table class="min-w-full border-collapse bg-white">
             <thead>
                 <tr class=" text-left  bg-gradient-to-r  from-green-300 to-blue-300 rounded-t-lg">
                     <th class="px-4 py-2 border">Employee Name</th>
@@ -112,4 +67,54 @@
                 @endforelse
             </tbody>
         </table>
+         @if ($showForm)
+            <div class="border p-2 mb-6 rounded-lg bg-gray-50 shadow">
+                <h2 class="text-lg font-semibold mb-2">New Leave Request</h2>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label>Employee Name</label>
+                        <select wire:model="users_id" class="w-full border rounded px-2 py-1">
+                            <option value="">Select Employee</option>
+                            @foreach (\App\Models\User::all() as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('users_id')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label>Start Date</label>
+                        <input type="date" wire:model="start_date" class="w-full border rounded px-2 py-1">
+                        @error('start_date')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label>End Date</label>
+                        <input type="date" wire:model="end_date" class="w-full border rounded px-2 py-1">
+                        @error('end_date')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label>Reason</label>
+                        <input type="text" wire:model="reason" class="w-full border rounded px-2 py-1">
+                        @error('reason')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <button wire:click="submit" class="bg-blue-600 text-white px-4 py-2 rounded shadow">Submit</button>
+            </div>
+        @endif
     </div>
+@livewireScripts
+@livewireStyles
+
+</div>

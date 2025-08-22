@@ -28,15 +28,11 @@ Route::get('/leave', LeaveModal::class)->name('leave');
 
 
 // Admin routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('dashboard', Dashboard::class)->name('dashboard');
-});
+// / Admin dashboard route
+Route::middleware(['auth', 'role:admin'])->get('/dashboard/admin', Dashboard::class)->name('admin.dashboard');
 
-// Employee routes  
-Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee.')->group(function () {
-    Route::get('/dashboard', Dashboard::class)->name('dashboard');
-});
-
+// Employee dashboard route
+Route::middleware(['auth', 'role:employee'])->get('/dashboard/employee', Dashboard::class)->name('employee.dashboard');
 // Logout
 Route::post('/logout', function () {
     Auth::logout();

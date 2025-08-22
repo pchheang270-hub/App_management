@@ -1,33 +1,20 @@
 @section('content')
     <div class=" flex-auto flex-col">
-        <header class="bg-white shadow-sm border-b px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <div class="text-lg font-semibold">Logo</div>
-                    @if (session('user_role') === 'admin')
-                        <h1 class="text-2xl font-bold text-gray-800">Welcome Admin</h1>
-                    @elseif (session('user_role') === 'employee')
-                        <h1 class="text-2xl font-bold text-gray-800">Welcome Employee</h1>
-                    @endif
-                </div>
 
-                <select wire:model="logout" class="border rounded px-3 py-2">
-                    <option value="">Logout</option>
-                    <option>Logout</option>
-                    <option>profile</option>
-                    {{-- <option>Marketing</option>
-                    <option>HR</option> --}}
-                </select>
-
-
-            </div>
-        </header>
         {{-- <main class="flex-1 overflow-y-auto p-6">{{ $slot }}</main> --}}
     </div>
     <div class="flex-1 p-8 overflow-auto mt-6 ml-6">
 
         {{-- Role Greeting --}}
         <div class="mb-6">
+            <div class="flex items-center space-x-4">
+                <div class="text-lg font-semibold">Logo</div>
+                @if (session('user_role') === 'admin')
+                    <h1 class="text-2xl font-bold text-gray-800">Welcome Admin</h1>
+                @elseif (session('user_role') === 'employee')
+                    <h1 class="text-2xl font-bold text-gray-800">Welcome Employee</h1>
+                @endif
+            </div>
 
         </div>
 
@@ -82,7 +69,7 @@
 
         <!-- Check-In / Out + Attendance Table (shared for all roles) -->
         <div class="flex flex-col gap-6">
-            <div class="flex gap-4 justify-center">
+            <div class="flex gap-4 justify-center mt-6">
                 <button wire:click="checkIn" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow">
                     ✅ Check-In
                 </button>
@@ -91,6 +78,13 @@
                     ⛔️ Check-Out
                 </button>
             </div>
+
+            @if (session()->has('message'))
+                <div class="mt-4 p-4 bg-blue-100 border border-blue-300 text-blue-800 rounded text-center">
+                    {{ session('message') }}
+                </div>
+            @endif
+
 
 
 
@@ -140,5 +134,7 @@
                 </div>
             @endif --}}
         </div>
+         @livewireScripts
+        @livewireStyles
     </div>
 @endsection

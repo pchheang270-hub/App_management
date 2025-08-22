@@ -14,6 +14,8 @@ class EmployeeModal extends Component
     public $formOpen = false;
     public $deleteOpen = false;
     public $usersId;
+    public $showModal = false;
+   
 
     public $name, $email, $position, $department, $join_date, $status = 'active', $avatar;
 

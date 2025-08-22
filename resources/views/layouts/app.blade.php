@@ -23,34 +23,20 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
 </head>
 
-<body>
-    <div class="flex ">
+<body class="bg-green-100">
 
-
-        <aside class="w-64 bg-white shadow-2xl rounded-lg px-6 py-8 space-y-6 ">
-            <div class=" border-b">
-                <h2 class="text-xl font-bold text-green-800">Admin Dashboard</h2>
-            </div>
-            <nav class="mt-6">
-
-
-                {{-- <a href="{{ route('dashboard') }}"
-                    class="flex items-center p-2 bg-green-200 rounded-l-lg border-l-4 border-green-500 font-semibold">🏠
-                    Dashboard</a> --}}
-                <a href="{{ route('employee') }}" class="flex items-center p-2">👤 Employees</a>
-                <a href="#" class="flex items-center p-2">📈 Attendance</a>
-                <a href="{{ route('leave') }}" class="flex items-center p-2">📋 Leave Requests</a>
-                <a href="#" class="flex items-center p-2">⚙️ Settings</a>
-
-
-            </nav>
-        </aside>
-
-
+    <div class="flex min-h-screen">
+        @if (!Request::is('home') && !Request::is('/'))
+            <livewire:inc.sidebar.sidebar />
+            <main class="flex-1 p-6">
+                @yield('content')
+            </main>
+        @else
+            <main class="w-full p-6">
+                @yield('content')
+            </main>
+        @endif
     </div>
-    @livewireScripts
-    @yield('content')
+
 </body>
-
-
 </html>

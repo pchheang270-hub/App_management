@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-white-800" >
+{{-- <div class="min-h-screen bg-white-800" >
 <aside class="">
         <h1 class="text-2xl font-bold text-blue-800"></h1>
 
@@ -33,4 +33,4 @@
     </aside>
 
     
-</div>
+</div> --}}
