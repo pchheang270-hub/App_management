@@ -29,16 +29,11 @@ class Login extends Component
             // Store the role in the session
             session(['user_role' => $role]);
 
-            if ($role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            } elseif ($role === 'employee') {
-                return redirect()->route('employee.dashboard');
-            } else {
-                Auth::logout();
-                $this->addError('email', 'Your user role is not recognized.');
-                return;
-            }
-        }
+            if (in_array($role, ['admin', 'employee'])) {
+              return redirect()->route('dashboard');
+}
+
+           }
 
         $this->addError('email', 'The provided credentials do not match our records.');
         $this->password = ''; // Clear password input

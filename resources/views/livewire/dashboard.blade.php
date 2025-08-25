@@ -6,18 +6,7 @@
     <div class="flex-1 p-8 overflow-auto mt-6 ml-6">
 
         {{-- Role Greeting --}}
-        <div class="mb-6">
-            <div class="flex items-center space-x-4">
-                <div class="text-lg font-semibold">Logo</div>
-                @if (session('user_role') === 'admin')
-                    <h1 class="text-2xl font-bold text-gray-800">Welcome Admin</h1>
-                @elseif (session('user_role') === 'employee')
-                    <h1 class="text-2xl font-bold text-gray-800">Welcome Employee</h1>
-                @endif
-            </div>
-
-        </div>
-
+       
         <!-- Main Widgets -->
 
         <!-- Main Widgets -->
@@ -95,7 +84,7 @@
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-green-300">
                             <tr>
                                 <th class="px-4 py-2 text-left">Name</th>
                                 <th class="px-4 py-2 text-left">Check-In</th>
@@ -107,10 +96,10 @@
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4">{{ $record->user->name }}</td>
                                     <td class="px-6 py-4">
-                                        {{ $record->check_in_time ? \Carbon\Carbon::parse($record->check_in_time)->format('g:i A') : '-' }}
+                                        {{ $record->check_in ? \Carbon\Carbon::parse($record->check_in)->format('g:i A') : '-' }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $record->check_out_time ? \Carbon\Carbon::parse($record->check_out_time)->format('g:i A') : '-' }}
+                                        {{ $record->check_out ? \Carbon\Carbon::parse($record->check_out)->format('g:i A') : '-' }}
                                     </td>
                                 </tr>
                             @empty
@@ -121,6 +110,7 @@
                                 </tr>
                             @endforelse
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -134,7 +124,8 @@
                 </div>
             @endif --}}
         </div>
-         @livewireScripts
+        @livewireScripts
         @livewireStyles
+
     </div>
 @endsection

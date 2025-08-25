@@ -12,7 +12,13 @@ use App\Http\Livewire\Page\LeaveModal;
 
 
 // Home/Landing page
-Route::get('home', Homescreen::class)->name('home');
+Route::get('/users', [UserController::class, 'index']);
+
+Route::get('/', Homescreen::class)->name('home');
+
+// Route::get('/', function () {
+//     return redirect('/home');
+// });
 
 
 // ----Route Page-----
@@ -24,15 +30,16 @@ Route::get('/leave', LeaveModal::class)->name('leave');
 // !!!Route login and register!!
   Route::get('/login', Login::class)->name('login');
   Route::get('/register', Register::class)->name('register');
+  Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
 
 
 // Admin routes
 // / Admin dashboard route
-Route::middleware(['auth', 'role:admin'])->get('/dashboard/admin', Dashboard::class)->name('admin.dashboard');
+// Route::middleware(['auth', 'role:admin'])->get('/dashboard/admin', Dashboard::class)->name('admin.dashboard');
 
 // Employee dashboard route
-Route::middleware(['auth', 'role:employee'])->get('/dashboard/employee', Dashboard::class)->name('employee.dashboard');
+// Route::middleware(['auth', 'role:employee'])->get('/dashboard/employee', Dashboard::class)->name('employee.dashboard');
 // Logout
 Route::post('/logout', function () {
     Auth::logout();

@@ -32,20 +32,7 @@ class EmployeeModal extends Component
         ];
     }
 
-    public function render()
-    {
-        $query = User::query();
-
-        if ($this->search) {
-            $query->where('name', 'like', '%' . $this->search . '%');
-        }
-
-
-        return view('livewire.page.employee-modal', [
-            'users' => $query->latest()->get(),
-        ])->extends('layouts.app')
-          ->section('content');
-    }
+   
 
     public function openForm($id = null)
     {
@@ -57,7 +44,7 @@ class EmployeeModal extends Component
 
         if ($id) {
             $user = User::findOrFail($id);
-            $this->usersId = $user->id;
+            $this->userId = $user->id;
             $this->name = $user->name;
             $this->email = $user->email;
             $this->position = $user->position;
@@ -75,7 +62,7 @@ class EmployeeModal extends Component
     {
         $this->validate();
 
-        $avatarPath = null;
+          $avatarPath = null;
         if ($this->avatar) {
             $avatarPath = $this->avatar->store('avatars', 'public');
         }
@@ -94,6 +81,7 @@ class EmployeeModal extends Component
         );
 
         $this->reset();
+        $this->formOpen = false;
         $this->emit('userUpdated');
     }
 
@@ -109,5 +97,22 @@ class EmployeeModal extends Component
         $this->reset();
         $this->deleteOpen = false;
         $this->emit('userUpdated');
+    }
+
+
+
+     public function render()
+    {
+        $query = User::query();
+
+        if ($this->search) {
+            $query->where('name', 'like', '%' . $this->search . '%');
+        }
+
+
+        return view('livewire.page.employee-modal', [
+            'users' => $query->latest()->get(),
+        ])->extends('layouts.app')
+          ->section('content');
     }
 }

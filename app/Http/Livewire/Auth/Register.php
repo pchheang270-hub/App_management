@@ -25,7 +25,7 @@ class Register extends Component
     ];
 
     public function register()
-    { 
+    {
         $this->validate();
 
         $user = User::create([

@@ -8,7 +8,7 @@ use App\Models\Leave;
 class LeaveModal extends Component
 {
     public $showForm = false; // controls form visibility
-    public $users_id, $start_date, $end_date, $reason;
+    public $user_id, $start_date, $end_date, $reason;
     public $leave;
 
     protected $listeners = ['refreshLeaves' => '$refresh'];
@@ -26,21 +26,21 @@ class LeaveModal extends Component
     public function submit()
     {
         $this->validate([
-            'users_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:user,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'required|string|max:255',
         ]);
 
         Leave::create([
-            'users_id' => $this->users_id,
+            'user_id' => $this->user_id,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'reason' => $this->reason,
             'status' => 'pending',
         ]);
 
-        $this->reset(['users_id', 'start_date', 'end_date', 'reason']);
+        $this->reset(['user_id', 'start_date', 'end_date', 'reason']);
         $this->showForm = false;
         $this->mount(); // refresh the table
     }

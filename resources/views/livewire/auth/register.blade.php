@@ -34,7 +34,7 @@
 
                     <div>
                         <label for="position" class="block text-sm font-medium text-gray-700">Position</label>
-                        <input type="text" id="position" name="position" required
+                        <input wire:model="position" type="text" id="position" name="position" required
                             class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Enter your position (e.g., Software Engineer)">
                         @error('position')

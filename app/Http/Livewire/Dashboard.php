@@ -3,6 +3,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Attendance;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Leave;
 class Dashboard extends Component
 {
@@ -13,33 +14,40 @@ class Dashboard extends Component
     
     {
         
-        $this->attendances = Attendance::with('employee')->get();
+        $this->attendances = Attendance::with('user')->get();
     }
 
     public function checkIn()
     {
+
         $attendance = Attendance::updateOrCreate(
             ['user_id' => Auth::id(), 'date' => today()],
             ['check_in' => now()]
         );
-        $this->reset(['formOpen', 'name', 'email', 'position', 'join_date', 'avatar', 'usersId']);
+        // $this->reset(['formOpen', 'name', 'email', 'position', 'join_date', 'avatar', 'usersId']);
         session()->flash('success', 'Employee saved successfully!');
+        
+    dd($attendance);
 
-        $this->attendances = Attendance::with('employee')->get(); // refresh table
+        $this->attendances = Attendance::with('user')->get(); // refresh table
     }
 
      public function checkOut()
     {
         $attendance = Attendance::where('user_id', Auth::id())
             ->whereDate('date', today())
-            ->whereData('date', last_7day())
             ->first();
 
-        if ($attendance) {
+        if ($attendance && !$attendance->check_out) {
             $attendance->update(['check_out' => now()]);
-            $this->attendances = Attendance::with('employee')->get(); // refresh table
+            $this->attendances = Attendance::with('employee')->get();
+
+            session()->flash('message', '⛔You have checked in successfully.'); // refresh table
+        }else {
+            session()->flash('message', '⚠️ You already checked out or not checked in yet.');
         }
-         session()->flash('message', '✅ You have checked in successfully.');
+         $this->attendances = Attendance::with('user')->get(); 
+         
     }
     public function render()
     {

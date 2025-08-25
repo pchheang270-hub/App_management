@@ -12,6 +12,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
+    <script src="https://cdn.tiny.cloud/1/YOUR-KEY-HERE/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@100;300;400;700;900&display=swap"
@@ -21,13 +22,22 @@
 
     <!-- AlpineJS -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
+    @livewireStyles
 </head>
 
 <body class="bg-green-100">
+    <div>
+       
+        <livewire:inc.headers.header/>
+
+    </div>
+    
 
     <div class="flex min-h-screen">
         @if (!Request::is('home') && !Request::is('/'))
             <livewire:inc.sidebar.sidebar />
+             
+           
             <main class="flex-1 p-6">
                 @yield('content')
             </main>
@@ -37,6 +47,7 @@
             </main>
         @endif
     </div>
+   
 
 </body>
 </html>

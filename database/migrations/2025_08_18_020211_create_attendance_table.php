@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id'); // Foreign key referencing users table
             $table->foreign('user_id')
             ->references('id')
-            ->on('users')
+            ->on('user')
             ->onDelete('cascade');
             $table->date('date');
             $table->time('check_in_time');
