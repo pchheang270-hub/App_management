@@ -26,7 +26,7 @@ class LeaveModal extends Component
     public function submit()
     {
         $this->validate([
-            'user_id' => 'required|exists:user,id',
+            'user_id' => 'required|exists:users,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'required|string|max:255',
@@ -57,6 +57,13 @@ class LeaveModal extends Component
         $leave = Leave::findOrFail($id);
         $leave->update(['status' => 'rejected']);
         $this->emit('refreshLeaves');
+    }
+
+     public function editLeave($id)
+    {
+        // Example: load leave record
+        $this->leave = \App\Models\Leave::find($id);
+        $this->dispatchBrowserEvent('open-leave-modal'); // optional
     }
     public function render()
     {

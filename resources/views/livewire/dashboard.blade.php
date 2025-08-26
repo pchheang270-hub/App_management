@@ -1,4 +1,4 @@
-@section('content')
+
     <div class=" flex-auto flex-col">
 
         {{-- <main class="flex-1 overflow-y-auto p-6">{{ $slot }}</main> --}}
@@ -58,9 +58,13 @@
 
         <!-- Check-In / Out + Attendance Table (shared for all roles) -->
         <div class="flex flex-col gap-6">
+           {{-- {{ dd($attendanceRecords) }} --}}
+         
+
             <div class="flex gap-4 justify-center mt-6">
                 <button wire:click="checkIn" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow">
                     ✅ Check-In
+                 
                 </button>
 
                 <button wire:click="checkOut" class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow">
@@ -114,6 +118,7 @@
                     </table>
                 </div>
             </div>
+       
 
             <!-- Link to Leave Request Page for Employee -->
             {{-- @if (session('user_role') === 'employee')
@@ -128,4 +133,3 @@
         @livewireStyles
 
     </div>
-@endsection

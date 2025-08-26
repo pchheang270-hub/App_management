@@ -1,11 +1,11 @@
 <header class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
     <!-- Logo / Brand -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center  gap-8">
         <img src="image/image.png" alt="Logo" class="h-10 w-10 rounded-full">
         <h1 class="text-xl font-bold text-gray-800">PTD</h1>
 
 
-         <div class="mb-2">
+         <div class="mb-2 px-8  ">
         <div class="flex items-center  space-x-8">
             {{-- <div class="text-lg font-semibold">Logo</div> --}}
             @if (session('user_role') === 'admin')

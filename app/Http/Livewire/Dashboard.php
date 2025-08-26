@@ -26,10 +26,9 @@ class Dashboard extends Component
         );
         // $this->reset(['formOpen', 'name', 'email', 'position', 'join_date', 'avatar', 'usersId']);
         session()->flash('success', 'Employee saved successfully!');
-        
-    dd($attendance);
 
-        $this->attendances = Attendance::with('user')->get(); // refresh table
+        $this->attendances = Attendance::with('user')->get(); 
+        $this->loadRecords();// refresh table
     }
 
      public function checkOut()
@@ -47,6 +46,7 @@ class Dashboard extends Component
             session()->flash('message', '⚠️ You already checked out or not checked in yet.');
         }
          $this->attendances = Attendance::with('user')->get(); 
+        $this->loadRecords();
          
     }
     public function render()

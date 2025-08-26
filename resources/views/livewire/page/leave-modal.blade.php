@@ -85,15 +85,9 @@
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block mb-1 font-medium">Employee Name</label>
-                        <select wire:model="user_id" class="w-full border rounded px-2 py-1">
-                            <option value="">Select Employee</option>
-                            @foreach (\App\Models\User::all() as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('user_id')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
+                        <input type="text" value="{{ Auth::user()->name }}"
+                            class="w-full border rounded px-2 py-1 bg-gray-100" readonly>
+                        <input type="hidden" wire:model="user_id" value="{{ Auth::id() }}">
                     </div>
 
                     <div>
@@ -114,6 +108,8 @@
 
                     <div class="col-span-2">
                         <label class="block mb-1 font-medium">Reason</label>
+                        {{-- <textarea id="message" wire:model="reason" name="message" rows="5" cols="40"
+                            placeholder="Type your message here..."></textarea> --}}
                         <input type="text" wire:model="reason" class="w-full border rounded px-2 py-1">
                         @error('reason')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
