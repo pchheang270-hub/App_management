@@ -11,6 +11,11 @@ use App\Models\Leave;
 class Dashboard extends Component
 {
     public $attendances;
+    public $thisMonthHours = 0;
+    public $lastMonthHours = 0;
+    public $monthComparison = 0; 
+    public $recentLeaves = [];// % vs last month
+
 
     public function mount()
     {
@@ -64,6 +69,62 @@ class Dashboard extends Component
 
         session()->flash('message', 'Check-Out successful!');
     }
+
+     protected function calculateMonthHours()
+    {
+       $now = now();
+
+    // Date ranges
+       $startThisMonth = $now->copy()->startOfMonth();
+       $endThisMonth   = $now->copy()->endOfMonth();
+
+       $startLastMonth = $now->copy()->subMonth()->startOfMonth();
+       $endLastMonth   = $now->copy()->subMonth()->endOfMonth();
+
+    // Query attendances for each month
+       $thisMonthRecords = Attendance::whereBetween('date', [$startThisMonth, $endThisMonth])
+        ->whereNotNull('check_in_time')
+        ->whereNotNull('check_out_time')
+        ->get();
+
+      $lastMonthRecords = Attendance::whereBetween('date', [$startLastMonth, $endLastMonth])
+        ->whereNotNull('check_in_time')
+        ->whereNotNull('check_out_time')
+        ->get();
+
+    // Helper to sum hours
+      $sumHours = function ($records) {
+        $minutes = 0;
+        foreach ($records as $att) {
+            $in  = \Carbon\Carbon::parse($att->date . ' ' . $att->check_in_time);
+            $out = \Carbon\Carbon::parse($att->check_out_time);
+
+            if ($out->greaterThan($in)) {
+                $minutes += $in->diffInMinutes($out);
+            }
+        }
+        return round($minutes / 60); // total hours
+    };
+
+    $this->thisMonthHours = $sumHours($thisMonthRecords);
+    $this->lastMonthHours = $sumHours($lastMonthRecords);
+
+    // Comparison %
+    if ($this->lastMonthHours > 0) {
+        $this->monthComparison = round((($this->thisMonthHours - $this->lastMonthHours) / $this->lastMonthHours) * 100);
+    } else {
+        $this->monthComparison = 0;
+    }
+  }
+
+   protected function loadRecentLeaves()
+   {
+    $this->recentLeaves = LeaveRequest::with('user')
+        ->latest()
+        ->take(5)
+        ->get();
+   }
+
 
 
     public function render()

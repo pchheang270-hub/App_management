@@ -31,8 +31,10 @@ Route::middleware('auth')->group(function () {
     // Admin-only routes
     Route::middleware('role:admin')->group(function () {
         Route::get('/employee', EmployeeModal::class)->name('employee');
+        Route::get('/attendance', AttendanceModal::class)->name('attendance');
         // Add other admin-only routes here
     });
+  
     
     // Logout
     Route::post('/logout', function () {

@@ -27,7 +27,7 @@
                 <span>Employees</span>
             </a>
 
-            <a href="#"
+            <a href="{{route('attendance')}}"
                class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition">
                 <i class="fa-solid fa-calendar-check"></i>
                 <span>Attendance</span>

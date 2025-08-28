@@ -1,4 +1,4 @@
-<div class="min-h-screen flex flex-col items-center justify-center bg-green-100">
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-100">
     <div class="text-center max-w-2xl mx-auto px-4">
         <!-- Header -->
         <div class="mb-8">

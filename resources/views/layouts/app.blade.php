@@ -27,7 +27,7 @@
     @livewireStyles
 </head>
 
-<body class="bg-green-100">
+<body class="bg-gray-100">
 
     {{-- Show header & sidebar only if not on home --}}
     @if (!Request::is('home') && !Request::is('/'))
