@@ -1,21 +1,23 @@
 <?php
 
 namespace App\Http\Livewire\Page;
-
+use Livewire\WithPagination;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeeModal extends Component
 {
     use WithFileUploads;
+    
+    protected $paginationTheme = 'tailwind';
 
     public $search = '';
     public $formOpen = false;
     public $deleteOpen = false;
     public $password;
-    public $usersId; // Correct property
-    public $showModal = false;
+    public $userId;
 
     public $name, $email, $position, $department, $join_date, $status = 'active', $avatar;
 
@@ -23,13 +25,13 @@ class EmployeeModal extends Component
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $this->usersId,
-            'password' => $this->usersId ? 'nullable|string|min:8' : 'required|string|min:8',
+            'email' => 'required|email|unique:users,email,' . $this->userId,
+            'password' => $this->userId ? 'nullable|string|min:8' : 'required|string|min:8',
             'position' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
+            // 'department' => 'required|string|max:255',
             'join_date' => 'required|date',
             'status' => 'required|in:active,inactive',
-            'avatar' => 'nullable|image|max:1024', // max 1MB
+            'avatar' => 'nullable|image|max:1024',
         ];
     }
 
@@ -37,20 +39,19 @@ class EmployeeModal extends Component
     {
         $this->resetErrorBag();
         $this->reset([
-            'usersId', 'name', 'email', 'position', 'department',
+            'userId', 'name', 'email', 'position', 
             'join_date', 'status', 'avatar', 'password'
         ]);
 
         if ($id) {
             $user = User::findOrFail($id);
-            $this->usersId = $user->id; // ✅ fix typo
+            $this->userId = $user->id;
             $this->name = $user->name;
             $this->email = $user->email;
             $this->position = $user->position;
-            $this->department = $user->department;
+            // $this->department = $user->department;
             $this->join_date = $user->join_date;
             $this->status = $user->status;
-            $this->avatar = null; // Avatar upload is handled separately
         }
 
         $this->formOpen = true;
@@ -60,40 +61,46 @@ class EmployeeModal extends Component
     {
         $this->validate();
 
-        $avatarPath = $this->avatar ? $this->avatar->store('avatars', 'public') : null;
+        $user = $this->userId ? User::find($this->userId) : new User();
 
-        User::updateOrCreate(
-            ['id' => $this->usersId],
-            [
-                'name' => $this->name,
-                'email' => $this->email,
-                'password' => $this->password ? Hash::make($this->password) : ($this->usersId ? $user->password : Hash::make('default123')),
-                'position' => $this->position,
-                'department' => $this->department,
-                'join_date' => $this->join_date,
-                'status' => $this->status,
-                'avatar' => $avatarPath ?? null,
-            ]
-        );
+        $user->name = $this->name;
+        $user->email = $this->email;
+        if ($this->password) {
+            $user->password = Hash::make($this->password);
+        } elseif (!$this->userId) {
+            $user->password = Hash::make('default123');
+        }
+
+        $user->position = $this->position;
+        // $user->department = $this->department;
+        $user->join_date = $this->join_date;
+        $user->status = $this->status;
+
+        if ($this->avatar) {
+            $user->avatar = $this->avatar->store('avatars', 'public');
+        }
+
+        $user->save();
 
         $this->reset([
-            'usersId', 'name', 'email', 'position', 'department',
-            'join_date', 'status', 'avatar'
+            'userId', 'name', 'email', 'position', 
+            'join_date', 'status', 'avatar', 'password'
         ]);
+
         $this->formOpen = false;
-        $this->emit('userUpdated'); // Table will listen to refresh
+        $this->emit('userUpdated');
     }
 
     public function confirmDelete($id)
     {
-        $this->usersId = $id;
+        $this->userId = $id;
         $this->deleteOpen = true;
     }
 
     public function delete()
     {
-        User::find($this->usersId)?->delete();
-        $this->reset(['usersId']);
+        User::find($this->userId)?->delete();
+        $this->reset(['userId']);
         $this->deleteOpen = false;
         $this->emit('userUpdated');
     }
@@ -107,7 +114,7 @@ class EmployeeModal extends Component
         }
 
         return view('livewire.page.employee-modal', [
-            'users' => $query->latest()->get(),
+            'users' => $query->latest()->paginate(10),
         ])->extends('layouts.app')
           ->section('content');
     }

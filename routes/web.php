@@ -5,56 +5,40 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Register;
 use App\Http\Livewire\Dashboard;
-// use App\Http\Livewire\Employee\Dashboard as EmployeeDashboard;
 use App\Http\Livewire\Layout\Homescreen;
 use App\Http\Livewire\Page\EmployeeModal;
 use App\Http\Livewire\Page\LeaveModal;
+use App\Http\Livewire\Page\AttendanceModal;
 
 
 // Home/Landing page
-Route::get('/users', [UserController::class, 'index']);
-
 Route::get('/', Homescreen::class)->name('home');
 
-// Route::get('/', function () {
-//     return redirect('/home');
-// });
+// Authentication routes (accessible to guests)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', Login::class)->name('login');
+    Route::get('/register', Register::class)->name('register');
+});
 
-
-// ----Route Page-----
-Route::get('/employee', EmployeeModal::class)->name('employee');
-Route::get('/leave', LeaveModal::class)->name('leave');
-
-
-
-// !!!Route login and register!!
-  Route::get('/login', Login::class)->name('login');
-  Route::get('/register', Register::class)->name('register');
-  Route::get('/dashboard', Dashboard::class)->name('dashboard');
-
-
-
-// Admin routes
-// / Admin dashboard route
-// Route::middleware(['auth', 'role:admin'])->get('/dashboard/admin', Dashboard::class)->name('admin.dashboard');
-
-// Employee dashboard route
-// Route::middleware(['auth', 'role:employee'])->get('/dashboard/employee', Dashboard::class)->name('employee.dashboard');
-// Logout
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect()->route('home');
-})->name('logout');
-
-
-
-
-// Guest routes (not logged in)
-
-// Route::middleware('guest')->group(function () {
-//     Route::get('/login', Login::class)->name('login');
-//     Route::get('/register', Register::class)->name('register');
+// Protected routes (require authentication)
+Route::middleware('auth')->group(function () {
+    // Dashboard - accessible to both admin and employee
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
     
-
-  
-// });
+    // Leave requests - accessible to both admin and employee
+    Route::get('/leave', LeaveModal::class)->name('leave');
+    
+    // Admin-only routes
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/employee', EmployeeModal::class)->name('employee');
+        // Add other admin-only routes here
+    });
+    
+    // Logout
+    Route::post('/logout', function () {
+        Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+        return redirect()->route('home');
+    })->name('logout');
+});

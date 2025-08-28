@@ -7,13 +7,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
+    {{-- @livewireStyles --}}
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
     {{-- <script src="https://cdn.tiny.cloud/1/YOUR_REAL_API_KEY/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> --}}
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /> --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Battambang:wght@100;300;400;700;900&display=swap">

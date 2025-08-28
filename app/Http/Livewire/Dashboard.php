@@ -1,72 +1,101 @@
 <?php
+
 namespace App\Http\Livewire;
+
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Leave;
+
 class Dashboard extends Component
 {
-  public $attendances;
-
+    public $attendances;
 
     public function mount()
-    
     {
-        
-        $this->attendances = Attendance::with('user')->get();
+        // Removed attendance loading here as render handles it
     }
 
     public function checkIn()
     {
+        $userId = auth()->id();
 
-        $attendance = Attendance::updateOrCreate(
-            ['user_id' => Auth::id(), 'date' => today()],
-            ['check_in' => now()]
-        );
-        // $this->reset(['formOpen', 'name', 'email', 'position', 'join_date', 'avatar', 'usersId']);
-        session()->flash('success', 'Employee saved successfully!');
-
-        $this->attendances = Attendance::with('user')->get(); 
-        $this->loadRecords();// refresh table
-    }
-
-     public function checkOut()
-    {
-        $attendance = Attendance::where('user_id', Auth::id())
-            ->whereDate('date', today())
+        // Prevent multiple check-ins
+        $existing = Attendance::where('user_id', $userId)
+            ->whereDate('date', now()->toDateString()) // use date column
             ->first();
 
-        if ($attendance && !$attendance->check_out) {
-            $attendance->update(['check_out' => now()]);
-            $this->attendances = Attendance::with('employee')->get();
-
-            session()->flash('message', '⛔You have checked in successfully.'); // refresh table
-        }else {
-            session()->flash('message', '⚠️ You already checked out or not checked in yet.');
+        if ($existing) {
+            session()->flash('error', 'You already checked in today!');
+            return;
         }
-         $this->attendances = Attendance::with('user')->get(); 
-        $this->loadRecords();
-         
+
+        Attendance::create([
+            'user_id' => $userId,
+            'date' => now()->toDateString(), // ✅ FIX: store the date
+            'check_in_time' => now()->toTimeString(),
+        ]);
+
+        session()->flash('message', 'Check-In successful!');
     }
+
+
+    public function checkOut()
+    {
+        $userId = auth()->id();
+
+        // Find today’s record
+        $attendance = Attendance::where('user_id', $userId)
+            ->whereDate('created_at', now()->toDateString())
+            ->first();
+
+        if (!$attendance) {
+            session()->flash('error', 'You have not checked in yet!');
+            return;
+        }
+
+        if ($attendance->check_out_time) {
+            session()->flash('error', 'You already checked out today!');
+            return;
+        }
+
+        $attendance->update(['check_out_time' => now()]);
+
+        session()->flash('message', 'Check-Out successful!');
+    }
+
+
     public function render()
     {
-        $totalEmployees = User::where('role', 'employee')->count();
-        $todayAttendance = Attendance::whereDate('date', today())->count();
-        $pendingLeaves = Leave::where('status', 'pending')->count();
-        $todayAttendanceRecords = Attendance::with('user')
-            ->whereDate('date', today())
-            ->get();
+        $data = [];
 
-        return view('livewire.dashboard', [
-            'totalEmployees' => $totalEmployees,
-            'todayAttendance' => $todayAttendance,
-            'pendingLeaves' => $pendingLeaves,
-            'attendanceRecords' => $todayAttendanceRecords,
-        ])->extends('layouts.app')->section('content');
+        if (Auth::user()->role === 'admin') {
+            $data = [
+                'totalEmployees' => User::where('role', 'employee')->count(),
+                'todayAttendance' => Attendance::whereDate('date', today())->count(),
+                'pendingLeaves' => Leave::where('status', 'pending')->count(),
+                'attendanceRecords' => Attendance::with('user')
+                    ->whereDate('date', today())
+                    ->get(),
+            ];
+        } else {
+            $data = [
+                'myAttendance' => Attendance::where('user_id', Auth::id())
+                    ->whereDate('date', today())
+                    ->first(),
+                'myLeaves' => Leave::where('user_id', Auth::id())
+                    ->where('status', 'pending')
+                    ->count(),
+                'attendanceRecords' => Attendance::with('user')
+                    ->where('user_id', Auth::id())
+                    ->whereDate('date', today())
+                    ->get(),
+            ];
+        }
 
-        // $this->section = $user->role;
+        return view('livewire.dashboard', $data)
+            ->extends('layouts.app')
+            ->section('content');
     }
-    
-
 }

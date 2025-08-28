@@ -16,8 +16,10 @@
                         <th class="p-2 border">Profile</th>
                         <th class="p-2 border">Name</th>
                         <th class="p-2 border">Email</th>
+                        <th class="p-2 border">Join Date</th> <!-- Already present ✅ -->
                         <th class="p-2 border">Position</th>
                         <th class="p-2 border">Actions</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -29,19 +31,43 @@
                             </td>
                             <td class="px-4 p-2 border">{{ $emp->name }}</td>
                             <td class="px-4 p-2 border">{{ $emp->email }}</td>
-                            <td class="px-4 p-2 border">{{ $emp->position }}</td>
                             <td class="px-4 p-2 border">
-                                <button wire:click="openForm({{ $emp->id }})" class="text-green-500">Edit</button>
-                                <button wire:click="confirmDelete({{ $emp->id }})"
-                                    class="text-red-500 ml-2">Delete</button>
+                                {{ \Carbon\Carbon::parse($emp->join_date)->format('Y-m-d') }}
                             </td>
+                            <td class="px-4 p-2 border">{{ $emp->position }}</td>
+
+                            <td class="px-4 py-2 border text-center" x-data="{ open: false }">
+                                <button @click="open = !open" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i> {{-- vertical dots --}}
+                                </button>
+
+                                <div x-show="open" @click.outside="open = false"
+                                    class="absolute bg-gray-50 border rounded shadow-md mt-2 p-2 z-10 flex flex-col gap-2 w-36 text-left">
+                                    <button wire:click="openForm({{ $emp->id }})" class="text-green-500">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                        Edit
+                                    </button>
+                                    <button wire:click="confirmDelete({{ $emp->id }})"class="text-red-500 ml-2">
+                                        <i class="fa-solid fa-trash"></i>
+                                        Delete
+                                    </button>
+
+                                </div>
+                            </td>
+
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center p-4 text-gray-500">No employees found.</td>
+                            <td colspan="6" class="text-center p-4 text-gray-500">No employees found.</td>
                         </tr>
                     @endforelse
                 </tbody>
+                @if ($users->hasPages())
+                    <div class="mt-4">
+                        {{ $users->links() }}
+                    </div>
+                @endif
+
             </table>
 
             <!-- Add/Edit Modal -->
@@ -50,7 +76,7 @@
                     <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl">
                         <div
                             class="px-6 py-4 bg-gradient-to-r from-green-600 to-blue-300 rounded-t-lg text-white flex justify-between items-center">
-                            <h2 class="text-xl font-semibold">{{ $usersId ? 'Edit User' : 'Create New User' }}</h2>
+                            <h2 class="text-xl font-semibold">{{ $userId ? 'Edit User' : 'Create New User' }}</h2>
                             <button wire:click="$set('formOpen', false)" class="text-white text-2xl">&times;</button>
                         </div>
 
@@ -93,6 +119,20 @@
                                             <input wire:model="position" type="text" placeholder="Enter position"
                                                 class="w-full border px-3 py-2 rounded">
                                         </div>
+                                        {{-- <div>
+                                            <label class="block text-gray-700">Department *</label>
+                                            <input wire:model="department" type="text" placeholder="Enter department"
+                                                class="w-full border px-3 py-2 rounded">
+                                        </div> --}}
+
+                                        <div>
+                                            <label class="block text-gray-700">Status *</label>
+                                            <select wire:model="status" class="w-full border px-3 py-2 rounded">
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
+                                            </select>
+                                        </div>
+
 
                                         <div>
                                             <label class="block text-gray-700">Join Date *</label>
@@ -101,7 +141,7 @@
                                         </div>
 
                                         <!-- Optional: Password field for new users -->
-                                        @if (!$usersId)
+                                        @if (!$userId)
                                             <div>
                                                 <label class="block text-gray-700">Password *</label>
                                                 <input wire:model="password" type="password"
@@ -117,7 +157,7 @@
                                         class="px-4 py-2 border border-green-600 rounded hover:bg-gray-100">Cancel</button>
                                     <button type="submit"
                                         class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                                        {{ $usersId ? 'Update' : 'Create' }}
+                                        {{ $userId ? 'Update' : 'Create' }}
                                     </button>
                                 </div>
                             </form>
