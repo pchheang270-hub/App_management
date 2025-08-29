@@ -52,7 +52,7 @@
     </nav>
 
     <!-- Footer -->
-    <div class="px-4 py-4 border-t">
+    {{-- <div class="px-4 py-4 border-t">
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-red-600 hover:bg-red-100 transition">
@@ -60,7 +60,7 @@
                 <span>Logout</span>
             </button>
         </form>
-    </div>
+    </div> --}}
 </div>
 
 

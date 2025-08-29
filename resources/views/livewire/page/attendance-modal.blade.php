@@ -109,47 +109,29 @@
             {{-- Attendance Table --}}
             @if ($activeTab === 'attendance')
                 <div class="bg-white rounded-lg shadow mt-6">
-                    <div class="p-2 border-b bg-blue-200">
+                    <div class="p-2 border-b ">
                         <h2 class="font-semibold">Attendance - {{ ucfirst($selectedPeriod) }}</h2>
                         <p class="text-sm text-gray-500">Detailed records for selected period</p>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full border-collapse bg-white shadow rounded-lg overflow-hidden">
                             <thead>
-                                <tr class="text-left bg-gradient-to-r from-green-300 to-blue-300 rounded-t-lg">
-                                    <th class="text-left px-4 py-3  border">Date</th>
-                                    <th class="text-left px-4 py-3  border">Employee</th>
-                                    <th class="text-left px-4 py-3  border">Department</th>
-                                    <th class="text-left px-4 py-3  border">Check-in</th>
-                                    <th class="text-left px-4 py-3  border">Check Out</th>
-                                    <th class="text-left px-4 py-3  border">Status</th>
+                                <tr class="text-left bg-gradient-to-r from-gray-100 to-blue-100 rounded-t-lg">
+                                    <th class="text-left px-4 py-3 border">Employee</th>
+                                    <th class="text-left px-4 py-3 border">Check-in</th>
+                                    <th class="text-left px-4 py-3 border">Check Out</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y">
                                 @forelse ($attendanceRecords as $record)
                                     <tr>
-                                        <td class="px-4 py-3 border">{{ $record->date->format('Y-m-d') }}</td>
                                         <td class="px-4 py-3 font-medium border">{{ $record->user->name }}</td>
-                                        <td class="px-4 py-3 border">{{ $record->user->department ?? '-' }}</td>
                                         <td class="px-4 py-3 border">{{ $record->check_in_time ?? '-' }}</td>
                                         <td class="px-4 py-3 border">{{ $record->check_out_time ?? '-' }}</td>
-                                        <td class="px-4 py-3 border">
-                                            @php
-                                                $map = [
-                                                    'present' => 'bg-green-100 text-green-700',
-                                                    'absent' => 'bg-red-100 text-red-700',
-                                                    'late' => 'bg-yellow-100 text-yellow-700',
-                                                ];
-                                            @endphp
-                                            <span
-                                                class="px-2 py-1 rounded text-xs {{ $map[$record->status] ?? 'bg-gray-100 text-gray-700' }}">
-                                                {{ ucfirst($record->status) }}
-                                            </span>
-                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center text-gray-500 py-8">
+                                        <td colspan="3" class="text-center text-gray-500 py-8">
                                             No attendance records found for this period.
                                         </td>
                                     </tr>
@@ -159,23 +141,21 @@
                     </div>
                 </div>
             @endif
-
+            
             {{-- Leave Requests Table --}}
             @if ($activeTab === 'leave')
                 <div class="bg-white rounded-lg shadow mt-6">
-                    <div class="p-2 border-b bg-blue-200">
+                    <div class="p-2 border-b ">
                         <h2 class="font-semibold">Leave Requests - {{ ucfirst($selectedPeriod) }}</h2>
                         <p class="text-sm text-gray-500">Overlapping the selected period</p>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
+                        <table class="w-full  text-canter text-sm">
                             <thead class="bg-gray-50">
-                                <tr class="text-left bg-gradient-to-r from-green-300 to-blue-300 rounded-t-lg">
+                                <tr class="text-left bg-gradient-to-r text-canter from-gray-100 to-blue-100 rounded-t-lg">
                                     <th class="text-left px-4 py-3 border">Employee</th>
-                                    <th class="text-left px-4 py-3 border">Type</th>
                                     <th class="text-left px-4 py-3 border">Start</th>
                                     <th class="text-left px-4 py-3 border">End</th>
-                                    <th class="text-left px-4 py-3 border">Days</th>
                                     <th class="text-left px-4 py-3 border">Status</th>
                                     <th class="text-left px-4 py-3 border">Actions</th>
                                 </tr>
@@ -191,17 +171,15 @@
                                     @endphp
                                     <tr>
                                         <td class="px-4 py-3 font-medium border">{{ $req->user->name }}</td>
-                                        <td class="px-4 py-3 border">{{ $req->type }}</td>
                                         <td class="px-4 py-3 border">{{ $req->start_date->format('Y-m-d') }}</td>
                                         <td class="px-4 py-3 border">{{ $req->end_date->format('Y-m-d') }}</td>
-                                        <td class="px-4 py-3 border">{{ $req->days }}</td>
                                         <td class="px-4 py-3 border">
                                             <span
                                                 class="px-2 py-1 rounded text-xs {{ $statusMap[$req->status] ?? 'bg-gray-100 text-gray-700' }}">
                                                 {{ ucfirst($req->status) }}
                                             </span>
                                         </td>
-                                        <td class="px-4 py-3">
+                                        <td class="px-4 py-3 border">
                                             @if ($req->status === 'pending')
                                                 <button wire:click="approveLeave({{ $req->id }})"
                                                     class="px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700">
@@ -218,7 +196,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center text-gray-500 py-8">
+                                        <td colspan="5" class="text-center text-gray-500 py-8">
                                             No leave requests found for this period.
                                         </td>
                                     </tr>
@@ -230,12 +208,13 @@
             @endif
         </div>
 
+
         @livewireScripts
         @livewireStyles
     </div>
 
     {{-- Toast (simple) --}}
-    <script>
+    {{-- <script>
         document.addEventListener('livewire:init', () => {
             Livewire.on('notify', ({
                 message
@@ -247,5 +226,5 @@
                 setTimeout(() => el.remove(), 2000);
             });
         });
-    </script>
+    </script> --}}
 </div>

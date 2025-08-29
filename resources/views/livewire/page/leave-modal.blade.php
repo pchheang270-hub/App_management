@@ -11,11 +11,11 @@
 
         <div class="bg-white rounded-lg shadow mt-6">
             <div class="p-2  white m-2">
-                <h2 class="text-2xl md:text-1xl font-semibold text-gray-800">Leaves & Request</h2>
+                <h2 class="text-lg font-semibold">Leaves & Request</h2>
             </div>
             <table class="min-w-full border-collapse bg-white shadow rounded-lg overflow-hidden">
                 <thead>
-                    <tr class="text-left bg-gradient-to-r from-green-300 to-blue-300 text-gray-700">
+                    <tr class="text-left bg-gradient-to-r from-gray-100 to-blue-100 text-gray-700">
                         <th class="px-4 py-2 border">Employee Name</th>
                         <th class="px-4 py-2 border">Date Range</th>
                         <th class="px-4 py-2 border">Reason</th>

@@ -1,11 +1,15 @@
 <div class="flex-1 p-8 overflow-auto">
+
+    <!-- ========================== HEADER ========================== -->
     <div class="m-4">
-        <h1 class="text-3xl font-bold text-gray-900​">Attendance Management</h1>
+        <h1 class="text-3xl font-bold text-gray-900">Dashboard Management</h1>
         <p class="text-gray-500">Track employee attendance and manage leave requests</p>
     </div>
-    <!-- Top Stats -->
+
+    <!-- ========================== TOP STATS (Only for Admin) ========================== -->
     @if (auth()->user()->role === 'admin')
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
             <!-- Total Employees -->
             <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between">
                 <div>
@@ -42,7 +46,7 @@
                 </div>
             </div>
 
-            <!-- This Month Hours (dummy data or add real field later) -->
+            <!-- This Month Hours -->
             <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between">
                 <div>
                     <h3 class="text-sm font-medium text-gray-500">This Month Hours</h3>
@@ -59,9 +63,8 @@
         </div>
     @endif
 
-    <!-- Quick Actions -->
+    <!-- ========================== QUICK ACTION BUTTONS ========================== -->
     <div class="bg-white rounded-lg shadow p-4 mb-8 flex flex-wrap items-center gap-4">
-
         <button wire:click="checkIn" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow">
             ✅ Check-In
         </button>
@@ -73,11 +76,13 @@
         <button class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-lg shadow">
             <i class="fas fa-user-plus"></i> Add Employee
         </button>
+
         <button class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-lg shadow">
             <i class="fas fa-download"></i> Export Report
         </button>
     </div>
 
+    <!-- ========================== FLASH MESSAGES ========================== -->
     @if (session()->has('message'))
         <div class="mt-4 p-4 bg-green-100 border border-green-300 text-green-800 rounded text-center">
             {{ session('message') }}
@@ -90,9 +95,10 @@
         </div>
     @endif
 
-    <!-- Content Grid -->
+    <!-- ========================== CONTENT GRID ========================== -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Attendance List -->
+
+        <!-- ====== LEFT SIDE: Attendance List ====== -->
         <div class="lg:col-span-2 bg-white rounded-lg shadow">
             <div class="p-4 border-b flex justify-between items-center">
                 <h2 class="text-lg font-semibold">Today's Attendance List</h2>
@@ -101,6 +107,8 @@
                     <button class="text-gray-500 text-sm border bg-red-300 px-2 py-1 rounded">View All</button>
                 </div>
             </div>
+
+            <!-- Attendance Table -->
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-100">
@@ -114,27 +122,35 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($attendanceRecords as $record)
                             <tr>
+                                <!-- Employee Name + Avatar -->
                                 <td class="px-4 py-2 flex items-center gap-2">
                                     <img src="https://ui-avatars.com/api/?name={{ $record->user->name }}"
                                         class="w-8 h-8 rounded-full">
                                     {{ $record->user->name }}
                                 </td>
+
+                                <!-- Check-In Time -->
                                 <td class="px-4 py-2">
                                     {{ $record->check_in_time ? \Carbon\Carbon::parse($record->check_in_time)->format('g:i A') : '-' }}
                                 </td>
+
+                                <!-- Check-Out Time -->
                                 <td class="px-4 py-2">
                                     {{ $record->check_out_time ? \Carbon\Carbon::parse($record->check_out_time)->format('g:i A') : '-' }}
                                 </td>
+
+                                <!-- Status -->
                                 <td class="px-4 py-2">
-                                    <span
-                                        class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-600">Present</span>
+                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-600">
+                                        Present
+                                    </span>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-4 py-2 text-center text-gray-500">No attendance records
-                                    for
-                                    today</td>
+                                <td colspan="4" class="px-4 py-2 text-center text-gray-500">
+                                    No attendance records for today
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -142,42 +158,70 @@
             </div>
         </div>
 
-        <!-- Sidebar -->
-        <div class="flex flex-col gap-6">
-            <!-- Recent Leave Requests -->
-            <!-- Recent Leave Requests -->
-            <div class="bg-white rounded-lg shadow">
-                <div class="p-4 border-b">
-                    <h2 class="text-lg font-semibold">Recent Leave Requests</h2>
+        <!-- ====== RIGHT SIDE: Sidebar (Admin only) ====== -->
+        @if (auth()->user()->role === 'admin')
+            <div class="flex flex-col gap-6">
+
+                <!-- Recent Leave Requests -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-4 border-b">
+                        <h2 class="text-lg font-semibold">Recent Leave Requests</h2>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        @forelse($recentLeaves as $leave)
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-medium">{{ $leave->user->name }}</p>
+                                    <p class="text-sm text-gray-500">
+                                        {{ ucfirst($leave->type) }} - {{ $leave->days }} days
+                                        ({{ \Carbon\Carbon::parse($leave->start_date)->format('M d') }}
+                                        - {{ \Carbon\Carbon::parse($leave->end_date)->format('M d') }})
+                                    </p>
+                                </div>
+                                <!-- Status Badge -->
+                                <span
+                                    class="px-2 py-1 text-xs rounded
+                                    @if ($leave->status === 'pending') bg-yellow-100 text-yellow-600
+                                    @elseif($leave->status === 'approved') bg-green-100 text-green-600
+                                    @else bg-red-100 text-red-600 @endif">
+                                    {{ ucfirst($leave->status) }}
+                                </span>
+                            </div>
+                        @empty
+                            <p class="text-sm text-gray-500">No recent leave requests</p>
+                        @endforelse
+                    </div>
                 </div>
-                <div class="p-4 space-y-3">
-                    @forelse($recentLeaves as $leave)
-                        <div class="flex justify-between items-center">
+
+                <!-- Recent Activities -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h2 class="text-lg font-semibold mb-3">Recent Activities</h2>
+                    @forelse ($recentActivities as $activity)
+                        <div class="flex items-start space-x-2 mb-2">
+                            <!-- Colored Dot -->
+                            <div class="mt-1">
+                                <span class="inline-block w-2 h-2 rounded-full bg-{{ $activity['color'] }}-500"></span>
+                            </div>
+                            <!-- Activity Info -->
                             <div>
-                                <p class="font-medium">{{ $leave->user->name }}</p>
+                                <p class="font-medium">{{ $activity['description'] }}</p>
                                 <p class="text-sm text-gray-500">
-                                    {{ ucfirst($leave->type) }} - {{ $leave->days }} days
-                                    ({{ \Carbon\Carbon::parse($leave->start_date)->format('M d') }}
-                                    - {{ \Carbon\Carbon::parse($leave->end_date)->format('M d') }})
+                                    {{ $activity['name'] }} —
+                                    {{ \Carbon\Carbon::parse($activity['created_at'])->diffForHumans() }}
                                 </p>
                             </div>
-                            <span
-                                class="px-2 py-1 text-xs rounded
-                    @if ($leave->status === 'pending') bg-yellow-100 text-yellow-600
-                    @elseif($leave->status === 'approved') bg-green-100 text-green-600
-                    @else bg-red-100 text-red-600 @endif">
-                                {{ ucfirst($leave->status) }}
-                            </span>
                         </div>
                     @empty
-                        <p class="text-sm text-gray-500">No recent leave requests</p>
+                        <p class="text-sm text-gray-500">No recent activities</p>
                     @endforelse
                 </div>
-            </div>
 
-        </div>
+            </div>
+        @endif
+
     </div>
 </div>
+
+<!-- Livewire Assets -->
 @livewireScripts
 @livewireStyles
-</div>

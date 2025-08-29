@@ -12,11 +12,11 @@
             <!-- Users Table -->
             <div class="bg-white rounded-lg shadow mt-6">
                 <div class="p-2  white m-2">
-                   <h2 class="text-2xl md:text-1xl font-semibold text-gray-800">Employees Management</h2>
+                   <h2 class="text-lg font-semibold">Employees Management</h2>
                 </div>
                 <table class="w-full table-auto border bg-white">
                     <thead>
-                        <tr class="text-left bg-gradient-to-r from-green-300 to-blue-300 rounded-t-lg">
+                        <tr class="text-left bg-gradient-to-r from-gray-100 to-blue-100 rounded-t-lg">
                             <th class="p-2 border">Profile</th>
                             <th class="p-2 border">Name</th>
                             <th class="p-2 border">Email</th>
