@@ -8,18 +8,20 @@ use App\Models\Leave;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\WithPagination;
 
 class AttendanceModal extends Component
 {
-
+    use WithPagination;
     public string $selectedPeriod = 'today'; // today|week|month|year
     public string $activeTab = 'attendance'; // attendance|leave
-
+    public $perPage = 10;
     // Flash message helper
     public function toast(string $message): void
     {
-        $this->dispatch('notify', message: $message);
+    $this->dispatchBrowserEvent('notify', ['message' => $message]);
     }
+
 
     public function setPeriod(string $period): void
     {
@@ -45,7 +47,7 @@ class AttendanceModal extends Component
 
     public function approveLeave(int $id): void
     {
-        $leave = LeaveRequest::findOrFail($id);
+        $leave = Leave::findOrFail($id);
         if ($leave->status !== 'approved') {
             $leave->update(['status' => 'approved']);
             $this->toast('Leave request approved.');
@@ -55,7 +57,7 @@ class AttendanceModal extends Component
 
     public function rejectLeave(int $id): void
     {
-        $leave = LeaveRequest::findOrFail($id);
+        $leave = Leave::findOrFail($id);
         if ($leave->status !== 'rejected') {
             $leave->update(['status' => 'rejected']);
             $this->toast('Leave request rejected.');
@@ -65,8 +67,8 @@ class AttendanceModal extends Component
 
     public function render()
     {
-        $attendanceRecords = Attendance::with('user')->get();
-        $leaveRequests     = Leave::with('user')->get();
+        $attendanceRecords = Attendance::with('user')->paginate($this->perPage);
+        $leaveRequests     = Leave::with('user')->paginate($this->perPage);
 
     // Example logic – adjust to match your schema
         $present = $attendanceRecords->where('status', 'present')->count();

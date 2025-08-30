@@ -51,11 +51,12 @@
                                     class="absolute bg-gray-50 border rounded shadow-md mt-2 p-2 z-10 flex flex-col gap-2 w-36 text-left">
 
                                     @if ($leave->status === 'pending')
-                                        <button wire:click="approve({{ $leave->id }})"
+                                        <button wire:click.prevent="approve({{ $leave->id }})" @click.stop
                                             class="flex items-center gap-2 px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">
-                                            <i class="fa-solid fa-circle-check"></i>
+                                            <i class="fa-solid fa-circle-check"></i> 
                                             Approve
                                         </button>
+
 
                                         <button wire:click="reject({{ $leave->id }})"
                                             class="flex items-center gap-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">

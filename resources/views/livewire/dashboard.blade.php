@@ -113,34 +113,34 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="px-4 py-2 text-left text-sm font-semibold">Employee</th>
-                            <th class="px-4 py-2 text-left text-sm font-semibold">Check-In</th>
-                            <th class="px-4 py-2 text-left text-sm font-semibold">Check-Out</th>
-                            <th class="px-4 py-2 text-left text-sm font-semibold">Status</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold border">Employee</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold border">Check-In</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold border">Check-Out</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold border">Status</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white divide-y divide-gray-200 ">
                         @forelse($attendanceRecords as $record)
                             <tr>
                                 <!-- Employee Name + Avatar -->
-                                <td class="px-4 py-2 flex items-center gap-2">
+                                <td class="px-4 py-2 flex items-center gap-2 border">
                                     <img src="https://ui-avatars.com/api/?name={{ $record->user->name }}"
                                         class="w-8 h-8 rounded-full">
                                     {{ $record->user->name }}
                                 </td>
 
                                 <!-- Check-In Time -->
-                                <td class="px-4 py-2">
+                                <td class="px-4 py-2 border">
                                     {{ $record->check_in_time ? \Carbon\Carbon::parse($record->check_in_time)->format('g:i A') : '-' }}
                                 </td>
 
                                 <!-- Check-Out Time -->
-                                <td class="px-4 py-2">
+                                <td class="px-4 py-2 border">
                                     {{ $record->check_out_time ? \Carbon\Carbon::parse($record->check_out_time)->format('g:i A') : '-' }}
                                 </td>
 
                                 <!-- Status -->
-                                <td class="px-4 py-2">
+                                <td class="px-4 py-2 border">
                                     <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-600">
                                         Present
                                     </span>
@@ -220,8 +220,10 @@
         @endif
 
     </div>
+
+    @livewireScripts
+@livewireStyles
 </div>
 
 <!-- Livewire Assets -->
-@livewireScripts
-@livewireStyles
+

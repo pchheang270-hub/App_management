@@ -138,6 +138,7 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        {{ $leaveRequests->links() }}
                     </div>
                 </div>
             @endif
@@ -203,6 +204,7 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        {{ $leaveRequests->links() }}
                     </div>
                 </div>
             @endif

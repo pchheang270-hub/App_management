@@ -12,7 +12,7 @@ use App\Http\Livewire\Page\AttendanceModal;
 
 
 // Home/Landing page
-Route::get('/', Homescreen::class)->name('home');
+Route::get('/', Homescreen::class)->name('/');
 
 // Authentication routes (accessible to guests)
 Route::middleware('guest')->group(function () {
@@ -41,6 +41,6 @@ Route::middleware('auth')->group(function () {
         Auth::logout();
         session()->invalidate();
         session()->regenerateToken();
-        return redirect()->route('home');
+        return redirect()->route('/');
     })->name('logout');
 });
